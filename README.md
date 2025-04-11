@@ -5,4 +5,4 @@
 - Henrique Correa
 - Jonathan D. Hartmann
 
-##[Dataset] (https://www.kaggle.com/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/code)
+##[Dataset] (https://www.kaggle.com/datasets/andrewmvd/face-mask-detection)
