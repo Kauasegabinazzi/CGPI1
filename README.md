@@ -18,3 +18,16 @@ Após a instalação é preciso configurar o ambiente, isso pode ser feito com o
 Posteriormente deve-se executar o comando `pip install -r requirements.txt`, que contém todas as dependências do projeto.
 
 Seguidos esses passos, é possível começar a editar o repositório e o continuar.
+
+O projeto realiza automaticamente o download e extração do dataset via API do Kaggle. Para isso funcionar corretamente, siga os passos abaixo:
+
+Acesse: https://www.kaggle.com/account
+
+Role até a seção "API" e clique em "Create New API Token"
+Isso vai gerar e baixar um arquivo chamado kaggle.json.
+
+Coloque o kaggle.json dentro de uma pasta chamada .kaggle no seu diretório de usuário: `C:\Users\<seu-usuario>\.kaggle\kaggle.json`
+
+Após configurar o kaggle.json, basta rodar: `python coletor_dataset.py`
+
+
