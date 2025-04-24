@@ -58,20 +58,27 @@ def detect_faces(image):
 def detect_mask(image):
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # faces = face_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=3, minSize=(20, 20))
+
+    # Detecta os rostos na imagem
     faces = detect_faces(image)
     print(faces)
     
     mask_count = 0
     no_mask_count = 0
-    
+
+     # Itera por cada rosto detectado
     for (x, y, w, h) in faces:
-        face = image[y:y+h, x:x+w]
-        face = cv2.resize(face, (224, 224))  # Redimensionar para o modelo
-        face = preprocess_input(face)
-        face = np.expand_dims(face, axis=0)
+
+        # Recorta a região do rosto 
         
+        face = image[y:y+h, x:x+w]
+        face = cv2.resize(face, (224, 224))  # Redimensionar para o modelo em 224x224 pixels
+        face = preprocess_input(face)  # Pré-processa
+        face = np.expand_dims(face, axis=0) # Expande a dimensão para criar um batch
+
+        # Faz a predição com o modelo de máscara
         prediction = model.predict(face)
-        mask, no_mask = prediction[0]
+        mask, no_mask = prediction[0] # Desempacota os dois valores da predição
         
         if mask > no_mask:
             mask_count += 1
@@ -79,9 +86,11 @@ def detect_mask(image):
         else:
             no_mask_count += 1
             color = (255, 0, 0)  # Vermelho (sem máscara)
-        
+
+        # Desenha um retângulo ao redor do rosto com a cor correspondente
         cv2.rectangle(image, (x, y), (x+w, y+h), color, 2)
-    
+
+    # Retorna a imagem anotada e os contadores de máscaras
     return image, mask_count, no_mask_count
 
 dataset_kaggle = "andrewmvd/face-mask-detection"
