@@ -11,31 +11,46 @@ model = load_model("files/model.h5")
 # carregar detector de rostos do OpenCV
 #face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
+# Carrega a rede neural treinada para detecção de rostos
 net = cv2.dnn.readNetFromCaffe(
     "deploy.prototxt",
     "res10_300x300_ssd_iter_140000.caffemodel"
 )
 
 def detect_faces(image):
+
+    # Pega altura e largura da imagem original
     (h, w) = image.shape[:2]
-    # Pré-processamento da imagem para a rede DNN
+    
+  # Pré-processa a imagem: redimensiona para 300x300, normaliza os valores, e cria um blob
     blob = cv2.dnn.blobFromImage(
         image, 
         scalefactor=1.0, 
         size=(300, 300), 
-        mean=(104.0, 177.0, 123.0)  # Valores médios subtraídos (normalização)
+        mean=(104.0, 177.0, 123.0)  # valores de média para subtrair (normalização BGR)
     )
+
+    # Passa o blob para a rede
     net.setInput(blob)
-    detections = net.forward()  # Executa a detecção
+
+    # Executa a detecção e obtém as detecções
+    detections = net.forward()
     print(detections)
     
     faces = []
+
+    # faz um loop sobre todas as detecções
     for i in range(detections.shape[2]):
-        confidence = detections[0, 0, i, 2]  # Confiança da detecção
-        if confidence > 0.3:  # Filtro de confiança (ajuste conforme necessário)
+
+         # Pega a confiança (probabilidade) da detecção
+    
+        confidence = detections[0, 0, i, 2]
+        
+        if confidence > 0.3:  # Filtro de confiança
+            # Extrai as coordenadas da caixa delimitadora
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             (x, y, x2, y2) = box.astype("int")
-            faces.append((x, y, x2 - x, y2 - y))  # Converte para (x, y, w, h)
+            faces.append((x, y, x2 - x, y2 - y))  #  Salva o rosto detectado
     
     return faces
 
